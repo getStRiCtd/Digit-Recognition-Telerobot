@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from keras.models import load_model
 
-
 def prediction(image, model):
     img = cv2.resize(image, (28, 28))
     img = img / 255
@@ -17,8 +16,9 @@ def prediction(image, model):
         prob = 0
     return res, prob
 
-
-model = load_model('../models/digits.h5')
+import os
+print(os.getcwd())
+model = load_model('.\\Package\\digits.h5')
 if __name__ == "__main__":
     cap = cv2.VideoCapture(1 + cv2.CAP_DSHOW)
     WIDTH = cap.get(cv2.CAP_PROP_FRAME_WIDTH)

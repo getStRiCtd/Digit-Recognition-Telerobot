@@ -5,6 +5,6 @@ My goal is to make our robot be able to  recognize lecture hall number via its c
 Number plate looks like this _//фотки_
 
 ## How it actually works?
-So, in our case the most obvious and the simplest way is to take part of image where number plate located and then sort it by regions of interest.
+So, in our case the most obvious and the simplest way is to take part of image where number plate located and then split it by regions of interest.
 <br>
 
