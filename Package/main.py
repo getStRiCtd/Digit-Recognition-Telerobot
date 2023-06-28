@@ -2,12 +2,13 @@ from imutils.perspective import four_point_transform
 from imutils import contours
 import imutils
 import cv2
-
 from recognizer import prediction, model
 
 
 cap = cv2.VideoCapture(1 + cv2.CAP_DSHOW)
+resd = ''
 while True:
+
         _, img = cap.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         edged = cv2.Canny(gray, 50, 200, 255)
@@ -31,7 +32,8 @@ while True:
             gray = four_point_transform(gray, displayCnt.reshape(4, 2))
             cnts, _ = cv2.findContours(warped, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             ret, thresh1 = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
-            cv2.imshow("warped", thresh1)
+          #  раскоментить для просмотра roi
+          #  cv2.imshow("warped", thresh1)
 
             # вычисляем bound box для цифр
             digits = []
@@ -42,8 +44,9 @@ while True:
                     if image.shape[0] > 28 and image.shape[1] > 28:
                         digits.append(c)
 
-            resd = ''
+
             if digits:
+                tmp =''
                 digits = contours.sort_contours(digits, method="left-to-right")[0]
                 for c in digits:
                     # extract the digit ROI
@@ -51,11 +54,9 @@ while True:
                     image = gray[y - 10:y + h+5, x - 15:x + w]
                     if image.shape[0] > 28 and image.shape[1] > 28:
                         res, prob = prediction(image, model)
-                        cv2.imshow("bw", image)
-                        cv2.waitKey(0)
-                        resd += str(res)
-            if resd != '':
-                print(resd)
+                        tmp += str(res)
+                        resd = tmp
 
-        cv2.imshow("canny", edged)
+        cv2.putText(img, f"Pred: {resd}", (40, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0))
+        cv2.imshow("canny", img)
         cv2.waitKey(25)
